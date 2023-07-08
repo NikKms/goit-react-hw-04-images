@@ -80,7 +80,7 @@ export const App = () => {
           images.length > 0 && (
             <>
               <ImageGallery images={images} openModal={toggleModal} />
-              {images.length >= 12 && !loading && (
+              {images.length % 12 === 0 && images.length >= 12 && !loading && (
                 <Button
                   onClick={() => {
                     setPage(prevPage => prevPage + 1);
