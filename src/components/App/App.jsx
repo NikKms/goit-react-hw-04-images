@@ -39,6 +39,7 @@ export const App = () => {
 
         if (newImages.length === 0) {
           toast.info('Sorry, no results found', toastConfig);
+          setImages([]);
           return;
         }
 
@@ -54,6 +55,8 @@ export const App = () => {
         setLoading(false);
       }
     };
+
+    if (query.length === 0 && page === 1) return;
 
     fetchImages(query, page);
   }, [query, page]);
