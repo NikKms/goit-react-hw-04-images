@@ -31,33 +31,37 @@ export const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      if (query !== '') {
-        try {
-          setLoading(true);
-          const response = await fetchItems(query, page);
-          const newImages = response.data.hits;
-          if (newImages.length > 0) {
-            setImages(prevImages => [...prevImages, ...newImages]);
-          } else {
-            toast.info('Sorry, no results found', toastConfig);
-          }
-        } catch (error) {
-          setError(error.message);
-          toast.error(error.message, toastConfig);
-        } finally {
-          setLoading(false);
+    const fetchImages = async (query, page) => {
+      try {
+        setLoading(true);
+        const response = await fetchItems(query, page);
+        const newImages = response.data.hits;
+
+        if (newImages.length === 0) {
+          toast.info('Sorry, no results found', toastConfig);
+          return;
         }
+
+        if (page === 1) {
+          setImages(newImages);
+        } else {
+          setImages(prevImages => [...prevImages, ...newImages]);
+        }
+      } catch (error) {
+        setError(error.message);
+        toast.error(error.message, toastConfig);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchImages();
+    fetchImages(query, page);
   }, [query, page]);
 
   const handleSubmit = query => {
     const lowercaseQuery = query.toLowerCase().trim();
     setQuery(lowercaseQuery);
-    setImages([]);
+    setPage(1);
   };
 
   const toggleModal = image => {
@@ -74,7 +78,16 @@ export const App = () => {
         {error !== null && <p>Error: {error.message}</p>}
 
         {query === '' ? (
-          <p>Please enter a value in the search field</p>
+          <p
+            style={{
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              fontSize: '24px',
+              fontWeight: 'bold',
+            }}
+          >
+            Please enter a value in the search field
+          </p>
         ) : (
           images &&
           images.length > 0 && (
