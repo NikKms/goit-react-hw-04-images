@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { ModalDisplay, Overlay } from './Modal.styled';
+import { ModalDisplay, Overlay, CloseButton } from './Modal.styled';
 
 export const Modal = ({ image, onClose }) => {
   useEffect(() => {
@@ -29,6 +29,9 @@ export const Modal = ({ image, onClose }) => {
   return (
     <Overlay onClick={handleOverlayClick}>
       <ModalDisplay>
+        <CloseButton onClick={onClose} type="button">
+          &times;
+        </CloseButton>
         <img
           src={image.largeImageURL}
           alt={image.tags}
